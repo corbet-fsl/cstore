@@ -1,0 +1,25 @@
+schema = 1
+project = "cstore"
+
+[checks.rust]
+kind = "cargo"
+actions = ["fmt", "test", "clippy"]
+all_features = true
+toolchain = "system"
+
+[checks.core]
+kind = "commands"
+commands = [["cargo", "check", "--locked", "--no-default-features"]]
+
+# Initial dependency capture runs explicitly on CI; ordinary checks stay locked.
+[checks.resolve]
+kind = "commands"
+commands = [["bash", ".ci/resolve.sh"]]
+
+[checks.typescript-resolve]
+kind = "commands"
+commands = [["npm", "install", "--package-lock-only", "--ignore-scripts"]]
+
+[checks.typescript]
+kind = "commands"
+commands = [["npm", "ci", "--ignore-scripts"], ["npm", "run", "check"], ["npm", "test"]]

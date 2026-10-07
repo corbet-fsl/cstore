@@ -28,7 +28,7 @@ commands = [["npm", "ci", "--ignore-scripts"], ["npm", "run", "check"], ["npm", 
 cache_tools = [["node", "--version"], ["npm", "--version"]]
 
 [render]
-tool_revision = "223adb5a008f4ed1ba36d1f52796ccd29077db6e"
+tool_revision = "a5048829c70a312d9b8ffc504ff799514b3f682c"
 
 [jobs.verify]
 scheduler = "crow"

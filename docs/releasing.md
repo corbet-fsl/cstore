@@ -36,12 +36,12 @@ release, dispatch on the tag: `gh workflow run release.yml --ref vX.Y.Z -f tag=v
    cd cstore-release && sha256sum --check --strict SHA256SUMS
    ```
 
-4. Publish the npm tarball with the npm token from sops:
+4. Publish the npm tarball with the npm token from your secret store:
 
    ```sh
    umask 077; rc=$(mktemp)
    printf '//registry.npmjs.org/:_authToken=%s\n' \
-     "$(sops --decrypt ~/agents/knowledge/secrets/npm.yml | yq -r .api_token)" > "$rc"
+     "<token from your secret store>" > "$rc"
    npm publish ./corbet-labs-cstore-X.Y.Z.tgz --userconfig "$rc" --access public
    shred -u "$rc"
    ```
@@ -50,13 +50,13 @@ release, dispatch on the tag: `gh workflow run release.yml --ref vX.Y.Z -f tag=v
    `latest` keeps pointing at the newest stable version.
 
 5. First crates.io release only (while `CRATES_TRUSTED` is off): publish from
-   the tag with the crates.io token from sops. CI already verified the build,
-   so skip the local compile:
+   the tag with the crates.io token from your secret store. CI already
+   verified the build, so skip the local compile:
 
    ```sh
    git clone --depth 1 --branch vX.Y.Z https://github.com/corbet-libs/cstore cstore-tag
    cd cstore-tag
-   CARGO_REGISTRY_TOKEN="$(sops --decrypt ~/agents/knowledge/secrets/crates-io.yml | yq -r .api_token)" \
+   CARGO_REGISTRY_TOKEN="<token from your secret store>" \
      cargo publish --locked --no-verify
    ```
 
